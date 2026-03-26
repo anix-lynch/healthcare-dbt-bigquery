@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_patients
+    description: "Cleaned, type-cast patient records. Source of truth for all marts."
+    columns:
+      - name: medical_condition
+        tests: [not_null]
+      - name: billing_amount
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: length_of_stay_days
+        description: "Derived: discharge_date - date_of_admission"
+
+  - name: mart_condition_kpis
+    description: "Clinical KPIs aggregated by medical condition"
+    columns:
+      - name: medical_condition
+        tests: [unique, not_null]
+      - name: total_patients
+        tests: [not_null]
+
+  - name: mart_billing_by_insurer
+    description: "Revenue cycle analysis by insurance provider"
+    columns:
+      - name: insurance_provider
+        tests: [unique, not_null]
+
+  - name: mart_monthly_admissions
+    description: "Time-series admission trends by month and admission type"

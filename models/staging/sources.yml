@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: raw
+    database: maps-platform-20251011-140544
+    schema: healthcare_analytics
+    tables:
+      - name: raw_patients
+        description: "Raw patient records loaded from CSV (55,500 rows)"
+        columns:
+          - name: name
+            description: "Patient name (synthetic)"
+          - name: age
+            tests: [not_null]
+          - name: medical_condition
+            tests: [not_null]
+          - name: billing_amount
+            tests: [not_null]
+          - name: date_of_admission
+            tests: [not_null]
+          - name: discharge_date
+            tests: [not_null]
+          - name: admission_type
+            tests:
+              - accepted_values:
+                  values: ['Emergency', 'Urgent', 'Elective']

@@ -1,0 +1,12 @@
+healthcare_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: your-gcp-project-id
+      dataset: healthcare_analytics
+      keyfile: /path/to/service-account-key.json
+      location: US
+      threads: 4
+      timeout_seconds: 300

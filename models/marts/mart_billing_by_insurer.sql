@@ -13,16 +13,15 @@ billing as (
         avg(billing_amount)                             as avg_claim_usd,
         min(billing_amount)                             as min_claim_usd,
         max(billing_amount)                             as max_claim_usd,
-        percentile_cont(billing_amount, 0.5) over
-            (partition by insurance_provider)           as median_claim_usd,
         avg(length_of_stay_days)                        as avg_los_days,
-        countif(test_results = 'Abnormal') / count(*)   as abnormal_rate
+        countif(test_results = 'Abnormal') / count(*)   as abnormal_rate,
+        approx_quantiles(billing_amount, 2)[offset(1)]  as median_claim_usd
 
     from patients
     group by insurance_provider
 )
 
-select distinct
+select
     insurance_provider,
     total_claims,
     round(total_billed_usd, 2)          as total_billed_usd,
